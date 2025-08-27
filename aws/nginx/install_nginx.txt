@@ -26,3 +26,10 @@ sudo make install
 
 6. Проверка
 sudo /usr/local/nginx/sbin/nginx -v
+
+7. Папка для HLS 
+sudo mkdir -p /tmp/hls
+sudo chown -R ubuntu:ubuntu /tmp/hls
+sudo chmod -R 755 /tmp/hls
+Убедись, что в nginx.conf указано правильно
+hls_path /tmp/hls;  # Без слэша на конце!
