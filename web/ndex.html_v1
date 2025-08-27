@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trail Capacity Research Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff8f5;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link.active {
+            color: #e65c00;
+            font-weight: 600;
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #e65c00;
+            border-radius: 2px;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(230, 92, 0, 0.1);
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #e65c00, #ff9966);
+        }
+        .camera-feed {
+            aspect-ratio: 16/9;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .team-card img {
+            transition: transform 0.3s ease;
+        }
+        .team-card:hover img {
+            transform: scale(1.05);
+        }
+        .login-form input {
+            transition: border 0.3s ease;
+        }
+        .login-form input:focus {
+            border-color: #e65c00;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 92, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex flex-col">
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0118.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-800">Trail Capacity Research</h1>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#dashboard" class="nav-link active text-gray-700 hover:text-orange-600 transition-colors">Dashboard</a>
+                    <a href="#team" class="nav-link text-gray-700 hover:text-orange-600 transition-colors">Team</a>
+                    <a href="#monitoring" class="nav-link text-gray-700 hover:text-orange-600 transition-colors">Monitoring</a>
+                    <a href="#resources" class="nav-link text-gray-700 hover:text-orange-600 transition-colors">Resources</a>
+                </nav>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden px-4 py-2 bg-white">
+                <a href="#dashboard" class="block py-2 text-gray-700 hover:text-orange-600">Dashboard</a>
+                <a href="#team" class="block py-2 text-gray-700 hover:text-orange-600">Team</a>
+                <a href="#monitoring" class="block py-2 text-gray-700 hover:text-orange-600">Monitoring</a>
+                <a href="#resources" class="block py-2 text-gray-700 hover:text-orange-600">Resources</a>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <section id="monitoring" class="py-10">
+                <div class="container mx-auto px-4">
+                    <div class="mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Live Monitoring</h2>
+                        <p class="text-gray-600">Real-time surveillance camera feeds from trail monitoring stations</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card bg-white p-6 rounded-xl shadow-md">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">North Entrance - Camera 1</h3>
+                            <div class="camera-feed mb-4">
+                                <video id="cam1" controls autoplay style="width:100%; height:100%; object-fit:cover;"></video>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-sm text-gray-600">Status: <span id="camera1-status" class="text-green-600 font-medium">Loading...</span></p>
+                                    <p class="text-sm text-gray-600">Last updated: <span id="camera1-update" class="font-medium">Just now</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-gray-800 text-white py-8">
+            <div class="container mx-auto px-4">
+                <p class="text-gray-400 text-sm">© 2023 Trail Capacity Research Project. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('cam1');
+            const status = document.getElementById('camera1-status');
+            const update = document.getElementById('camera1-update');
+
+            // ✅ Правильный URL — stream.m3u8 (не stream1)
+            const hlsUrl = 'http://aws_pub_ip_addr/hls/stream.m3u8';
+
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    debug: false,
+                    enableWorker: true,
+                    fragLoadingTimeOut: 10000,
+                    manifestLoadingTimeOut: 10000
+                });
+                hls.loadSource(hlsUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    console.log('HLS manifest loaded');
+                    status.textContent = 'Online';
+                    update.textContent = new Date().toLocaleTimeString();
+                    video.play().catch(e => console.log('Autoplay blocked:', e));
+                });
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    console.error('HLS error:', data);
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                status.textContent = 'Network Error';
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                status.textContent = 'Media Error';
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.startLoad();
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = hlsUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    status.textContent = 'Online';
+                    update.textContent = new Date().toLocaleTimeString();
+                    video.play().catch(e => console.log('Autoplay blocked:', e));
+                });
+            } else {
+                status.textContent = 'Not Supported';
+            }
+
+            setInterval(() => {
+                update.textContent = new Date().toLocaleTimeString();
+            }, 60000);
+        });
+    </script>
+</body>
+</html>
