@@ -1,0 +1,28 @@
+1. Установка зависимостей
+sudo apt update
+sudo apt install build-essential libpcre3 libpcre3-dev libssl-dev zlib1g-dev -y
+
+2. Скачивание nginx и nginx-rtmp-module
+cd /tmp
+wget http://nginx.org/download/nginx-1.24.0.tar.gz
+git clone https://github.com/arut/nginx-rtmp-module.git
+
+3. Распаковка nginx
+tar -zxvf nginx-1.24.0.tar.gz
+cd nginx-1.24.0
+
+4. Конфигурация с rtmp-модулем
+./configure \
+  --prefix=/usr/local/nginx \
+  --with-http_ssl_module \
+  --with-http_v2_module \
+  --with-http_realip_module \
+  --with-http_stub_status_module \
+  --with-http_gzip_static_module \
+  --add-module=../nginx-rtmp-module
+ 5. Сборка и установка
+make
+sudo make install
+
+6. Проверка
+sudo /usr/local/nginx/sbin/nginx -v
